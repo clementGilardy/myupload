@@ -51,7 +51,9 @@
             <li><a href="{% url "user.views.inscription" %}">Inscription</a></li>
             <li><a href="{% url "django.contrib.auth.views.login" %}">Connexion</a></li>
         {%else%}
-            <li><a href="#">Profil</a></li>
+            <li><a href="#">
+                {{user.username|title}}
+            </a></li>
             <li><a href="{% url "user.views.deconnexion" %}">Déconnexion</a></li>
         {%endif%}
       </ul>
