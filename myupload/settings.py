@@ -16,6 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LOGIN_REDIRECT_URL = '/upload/accueil'
+LOGIN_URL = '/user/connexion'
 
 
 # Quick-start development settings - unsuitable for production

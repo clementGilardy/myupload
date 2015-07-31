@@ -1,14 +1,56 @@
 {% extends "base.html" %}
+{% load static %}
+{%block css%}
+    {{block.super}}
+    <link rel="stylesheet" href="{% static 'upload/css/folder.css' %}" type="text/css" media="all" />
+{%endblock%}
+
+
 
 {% block content %}
+    {#debut modal#}
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Nouveau dossier</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="from-modal" action="">
+                        <div class="form-group">
+                            <label for="folder" class="control-label">Nom du dossier : </label>
+                            <input type="text" class="form-control" id="folder-name">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-primary new-folder" data-dismiss="modal">Ajouter</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Mes documents</div>
+                <div class="panel-heading">Mes documents <a class="launchModal" href=""><span
+                style="font-size:30px; font-style:bold" class="glyphicon glyphicon-plus"></span></a></div>
                 <div class="panel-body">
+                    <div class="alert-doc"></div>
+                    <div id="folder">
+                        {% for document in fileUser %}
+                            {{document.name}}
+                        {%endfor%}
+
+                    </div>
                 </div>                    
              </div>
         </div>
     </div>
 {%endblock%}
 
+{% block javascripts %}
+    {{block.super}}
+    <script src="{% static 'upload/js/gestionDocument.js' %}"></script>
+{%endblock%}

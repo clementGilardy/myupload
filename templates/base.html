@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     {% load static %}
+    {% block css%}
     <link rel="stylesheet" href="{% static 'myupload/css/bootstrap.css' %}" type="text/css" media="all" />
     <link rel="stylesheet" href="{% static 'myupload/css/bootstrap.theme.css' %}" type="text/css" media="all" />
     <link rel="stylesheet" href="{% static 'myupload/css/index.css' %}" type="text/css" media="all" />
+    {%endblock%}
     <title>Maquette</title>
 </head>
 <body>
