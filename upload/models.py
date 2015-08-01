@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 class Document(models.Model):
     name = models.CharField(max_length=100)
     author = models.ForeignKey(User)
-    path = models.CharField(max_length=300)
+    docContains = models.ForeignKey('self',null=True)
+    path = models.CharField(max_length=300,null=True)
+    realPath = models.CharField(max_length=300,null=True)
     size = models.IntegerField(null=True)
     icon = models.CharField(max_length=300,null=True)
     format = models.CharField(max_length=10,null=True)

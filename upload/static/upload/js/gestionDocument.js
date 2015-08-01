@@ -1,6 +1,6 @@
 $(function(){
     
-    display_document();
+    display_document("");
 
     $('button.new-folder').click(function(e){
         var newFolder = $('#folder-name').val();   
@@ -24,7 +24,7 @@ $(function(){
  
                 $('.alert-doc').append(alertError);
                 }
-                display_document();
+                display_document("");
             }
         });
     });
@@ -34,17 +34,24 @@ $(function(){
         $('#myModal').modal('show');
     });
 
-    function display_document()
+    function display_document(id)
     {
         $('#folder').empty();
          $.ajax({
             type: "POST",
             url: "/upload/display-document",
+            data: {'id_doc':JSON.stringify(id)},
             success: function(data){
                 $.each(data["fileUser"], function(index,value){
                     realValue = value.toString().split(',');
-                    divDoc = '<div style="width:50px;text-align:center;"><img height="50px" src="'+realValue[2]+'"/><br><a href="/upload/display-document">'+realValue[0]+'</a> </div>';
+                    divDoc = '<div style="width:50px;text-align:center;"><img height="50px" src="'+realValue[2]+'"/><br><a class="link-folder" href="">'+realValue[0]+'</a> </div>';
                     $('#folder').append(divDoc);
+
+                    $('.link-folder').click(function(event){
+                        event.preventDefault();
+                       display_document(realValue[4]); 
+                    });
+
                 });
             },
             fail: function(){

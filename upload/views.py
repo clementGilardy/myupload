@@ -24,7 +24,7 @@ def add_folder(request):
         os.mkdir(directoryUser)
         if os.path.exists(directoryUser):
             iconFile = os.path.join('/static','upload','images','closed_folder.png')
-            document = Document(name=nameOfFolder,author=request.user,path=directoryUser,icon=iconFile,format="folder")
+            document = Document(name=nameOfFolder,author=request.user,path=request.user.username+'/'+nameOfFolder,realPath=directoryUser,icon=iconFile,format="folder")
             document.save()
         json_data = json.dumps({"HTTPRESPONSE":True})
     else:
@@ -34,16 +34,29 @@ def add_folder(request):
 
 @csrf_exempt
 def display_folder(request):
+    id = json.loads(request.POST['id_doc'])
     directoryUser = os.path.dirname(os.path.abspath(__file__)) + '/documents/' + request.user.username 
     if os.path.exists(directoryUser) == False:
         os.mkdir(directoryUser)
 
     listFileUser = []
-    fileUser = Document.objects.filter(author=request.user)
+    fileContains = []
+    if id == None or id == "" :
+        fileUser = Document.objects.filter(author=request.user)
 
-    for folder in fileUser:
-        listFileUser.append([folder.name,folder.format,folder.icon,os.path.join(directoryUser,folder.name)])
+        for folder in fileUser:
+            listFileUser.append([folder.name,folder.format,folder.icon,os.path.join(directoryUser,folder.name),folder.id])
+        json_data = json.dumps({'fileUser':listFileUser})
+    else: 
+        fileUser = Document.objects.filter(id=id)
+        if fileUser != None:
+            for folder in fileUser:
+                listFileUser.append([folder.name,folder.format,folder.icon,os.path.join(directoryUser,folder.name)])
+                if folder.docContains != None:
+                    doc = Document.objects.filter(id=folder.docContains)
+                    fileContains.append([doc.name,doc.format,doc.icon,os.path.join(directoryUser,doc.name)])
+            json_data = json.dumps({'fileUser':fileContains})
 
-    json_data = json.dumps({'fileUser':listFileUser})
+
 
     return HttpResponse(json_data,content_type="application/json")
