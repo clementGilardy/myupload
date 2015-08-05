@@ -4,12 +4,13 @@ $(function(){
 
     $('button.new-folder').click(function(e){
         var newFolder = $('#folder-name').val();   
+        var parents = $('div.panel-heading span').attr('id');
          $.ajax({
             type: "POST",
             url: "/upload/ajout-document",
             dataType: "json",
             traditional: true,
-            data: {'name_folder': JSON.stringify(newFolder)},
+            data: {'name_folder': JSON.stringify(newFolder),'id_parent':JSON.stringify(parents)},
             success: function(data){
             console.log(data['HTTPRESPONSE']);
                 if(data['HTTPRESPONSE'])
@@ -42,14 +43,17 @@ $(function(){
             url: "/upload/display-document",
             data: {'id_doc':JSON.stringify(id)},
             success: function(data){
+                $('#folder').empty();
                 $.each(data["fileUser"], function(index,value){
                     realValue = value.toString().split(',');
-                    divDoc = '<div style="width:50px;text-align:center;"><img height="50px" src="'+realValue[2]+'"/><br><a class="link-folder" href="">'+realValue[0]+'</a> </div>';
+                    divDoc = '<div style="display:inline-block;margin-left:9px;width:50px;text-align:center;"><img height="50px" src="'+realValue[2]+'"/><br><a class="link-folder" path="'+realValue[5]+'" id="'+realValue[4]+'"  href="">'+realValue[0]+'</a> </div>';
                     $('#folder').append(divDoc);
 
                     $('.link-folder').click(function(event){
                         event.preventDefault();
-                       display_document(realValue[4]); 
+                        $('div.panel-heading').html('Mes documents / <span id="'+$(this).attr('id')+'">'+$(this).attr('path')+'</span>');
+                        $('input.path').val($(this).attr('path'));
+                       display_document($(this).attr('id')); 
                     });
 
                 });

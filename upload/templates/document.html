@@ -21,6 +21,7 @@
                         <div class="form-group">
                             <label for="folder" class="control-label">Nom du dossier : </label>
                             <input type="text" class="form-control" id="folder-name">
+                            <input type="hidden" class="path" value="">
                         </div>
                     </form>
                 </div>
@@ -34,9 +35,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Mes documents <a class="launchModal" href=""><span
-                style="font-size:30px; font-style:bold" class="glyphicon glyphicon-plus"></span></a></div>
+                <div class="panel-heading">Mes documents </div>
                 <div class="panel-body">
+                <div class="side-bar-menu">
+                <a class="launchModal" href=""><span style="font-size:25px;" class="glyphicon glyphicon-plus"></span></a>
+                </div>
                     <div class="alert-doc"></div>
                     <div id="folder">
                         {% for document in fileUser %}
