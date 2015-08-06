@@ -35,6 +35,16 @@ $(function(){
         $('#myModal').modal('show');
     });
 
+    
+    $('a.level-up').click(function(event){
+        event.preventDefault();
+        id = $(this).attr('parent');
+        display_document(id);
+
+    });
+
+    
+
     function display_document(id)
     {
         $('#folder').empty();
@@ -48,10 +58,9 @@ $(function(){
                     realValue = value.toString().split(',');
                     divDoc = '<div style="display:inline-block;margin-left:9px;width:50px;text-align:center;"><img height="50px" src="'+realValue[2]+'"/><br><a class="link-folder" path="'+realValue[5]+'" id="'+realValue[4]+'"  href="">'+realValue[0]+'</a> </div>';
                     $('#folder').append(divDoc);
-
+                    $('a.level-up').attr('parent',realValue[6]);
                     $('.link-folder').click(function(event){
                         event.preventDefault();
-                        $('div.panel-heading').html('Mes documents / <span id="'+$(this).attr('id')+'">'+$(this).attr('path')+'</span>');
                         $('input.path').val($(this).attr('path'));
                        display_document($(this).attr('id')); 
                     });

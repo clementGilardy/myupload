@@ -50,7 +50,6 @@ def add_folder(request):
 
 @csrf_exempt
 def display_folder(request):
-    print(request.POST['id_doc'])
     id = json.loads(request.POST['id_doc'])
     directoryUser = os.path.dirname(os.path.abspath(__file__)) + '/documents/' + request.user.username 
     iconFile = os.path.join('/static','upload','images','closed_folder.png')
@@ -65,16 +64,15 @@ def display_folder(request):
     if id == None or id == "" :
         docUser = Document.objects.get(author=request.user,path=request.user.username)
         fileUser = Document.objects.filter(docContains=docUser.id)
-
         for folder in fileUser:
-            listFileUser.append([folder.name,folder.format,folder.icon,os.path.join(directoryUser,folder.name),folder.id,folder.path])
+            listFileUser.append([folder.name,folder.format,folder.icon,os.path.join(directoryUser,folder.name),folder.id,folder.path,docUser.docContains_id])
         json_data = json.dumps({'fileUser':listFileUser})
     else: 
         folder = Document.objects.get(id=id)
         if folder != None:
             fileUser = Document.objects.filter(docContains=folder.id)
             for file in fileUser:
-                fileContains.append([file.name,file.format,file.icon,os.path.join(directoryUser,file.name),file.id,file.path])
+                fileContains.append([file.name,file.format,file.icon,os.path.join(directoryUser,file.name),file.id,file.path,folder.docContains_id])
         json_data = json.dumps({'fileUser':fileContains})
 
     return HttpResponse(json_data,content_type="application/json")

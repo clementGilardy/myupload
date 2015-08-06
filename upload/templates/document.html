@@ -38,14 +38,11 @@
                 <div class="panel-heading">Mes documents </div>
                 <div class="panel-body">
                 <div class="side-bar-menu">
-                <a class="launchModal" href=""><span style="font-size:25px;" class="glyphicon glyphicon-plus"></span></a>
+                    <a class="level-up" parent="" href=""><span style="font-size:25px;" class="glyphicon glyphicon-level-up"></span></a>
+                    <a class="launchModal" href=""><span style="font-size:25px;" class="glyphicon glyphicon-plus"></span></a>
                 </div>
                     <div class="alert-doc"></div>
                     <div id="folder">
-                        {% for document in fileUser %}
-                            {{document.name}}
-                        {%endfor%}
-
                     </div>
                 </div>                    
              </div>
