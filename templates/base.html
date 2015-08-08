@@ -28,8 +28,8 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="{% url "upload.views.home" %}">Accueil</a></li>
-        {%if user.is_authenticated %}
-            <li><a href="{% url "upload.views.documents" %}">Mes documents</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url "upload.views.documents" user.profil.mainDocument_id  %}">Mes documents</a></li>
         {%endif%}
       </ul>
       <form class="navbar-form navbar-left" role="search">

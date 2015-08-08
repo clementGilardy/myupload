@@ -21,7 +21,7 @@
                         <div class="form-group">
                             <label for="folder" class="control-label">Nom du dossier : </label>
                             <input type="text" class="form-control" id="folder-name">
-                            <input type="hidden" class="path" value="">
+                            <input type="hidden" class="parent" value="{{folder.id}}">
                         </div>
                     </form>
                 </div>
@@ -38,11 +38,19 @@
                 <div class="panel-heading">Mes documents </div>
                 <div class="panel-body">
                 <div class="side-bar-menu">
-                    <a class="level-up" parent="" href=""><span style="font-size:25px;" class="glyphicon glyphicon-level-up"></span></a>
+                    {% if folder.docContains.id != None %}
+                        <a class="level-up" href="{% url 'upload.views.documents' folder.docContains.id %}"><span style="font-size:25px;" class="glyphicon glyphicon-level-up"></span></a>
+                    {%endif%}
                     <a class="launchModal" href=""><span style="font-size:25px;" class="glyphicon glyphicon-plus"></span></a>
                 </div>
                     <div class="alert-doc"></div>
                     <div id="folder">
+                        {%for document in documents %}
+                            <div class="link-folder" style="display:inline-block;margin-left:9px;text-align:center">
+                                <img style="height:50px" src="{{document.icon}}" alt="{{document.name}}"/><br>
+                                <a class="link-folder" href="{% url 'upload.views.documents' document.id %}",id="{{document.id}}">{{document.name}}</a>
+                            </div>
+                        {%endfor%}
                     </div>
                 </div>                    
              </div>

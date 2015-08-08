@@ -12,7 +12,12 @@ def home (request):
     return render(request, 'index.html')
 
 @login_required
-def documents (request):
+@csrf_exempt
+def documents (request,id=None):
+    folder = Document.objects.get(id=id)
+    if folder != None:
+        documents = Document.objects.filter(docContains=folder.id).exclude(id=folder.id)
+
     return render(request, 'document.html',locals())
 
 @csrf_exempt
@@ -27,52 +32,17 @@ def add_folder(request):
     
     directoryUser = os.path.join(os.path.dirname(os.path.abspath(__file__)),'documents',request.user.username) 
 
+    json_data = json.dumps({"response":False})
     if os.path.exists(directoryUser):
         iconFile = os.path.join('/static','upload','images','closed_folder.png')
         if parent != None and parent != "":
             docParent = Document.objects.get(id=parent)
             realPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),'documents',docParent.path,nameOfFolder)
-            document = Document(name=nameOfFolder,author=request.user,docContains=docParent,path=os.path.join(docParent.path,nameOfFolder),realPath=realPath,icon=iconFile,format="folder")
-            document.save()
-        else:
-            docUser = Document.objects.get(author=request.user,path=request.user.username)
-            realPath = os.path.join(os.path.dirname(os.path.abspath(__file__)),'documents',request.user.username,nameOfFolder)
-            document = Document(name=nameOfFolder,author=request.user,docContains=docUser,path=request.user.username+'/'+nameOfFolder,realPath=os.path.join(directoryUser,nameOfFolder),icon=iconFile,format="folder")
-            docParent = Document.objects.get(path=request.user.username)
-            document.save()
-
-        os.mkdir(realPath)
-        json_data = json.dumps({"HTTPRESPONSE":True})
-    else:
-        json_data = json.dumps({"HTTPRESPONSE":False})
+            if os.path.exists(realPath) == False:
+                document = Document(name=nameOfFolder,author=request.user,docContains=docParent,path=os.path.join(docParent.path,nameOfFolder),realPath=realPath,icon=iconFile,format="folder")
+                document.save()
+                os.mkdir(realPath)
+                json_data = json.dumps({"response":True,'name':document.name,'id':document.id,'icon':document.icon})
 
     return HttpResponse(json_data, content_type="application/json")
 
-@csrf_exempt
-def display_folder(request):
-    id = json.loads(request.POST['id_doc'])
-    directoryUser = os.path.dirname(os.path.abspath(__file__)) + '/documents/' + request.user.username 
-    iconFile = os.path.join('/static','upload','images','closed_folder.png')
-
-    if os.path.exists(directoryUser) == False:
-        docUser = Document(name=request.user.username,author=request.user,path=request.user.username,realPath=directoryUser,icon=iconFile,format="folder")
-        docUser.save()
-        os.mkdir(directoryUser)
-
-    listFileUser = []
-    fileContains = []
-    if id == None or id == "" :
-        docUser = Document.objects.get(author=request.user,path=request.user.username)
-        fileUser = Document.objects.filter(docContains=docUser.id)
-        for folder in fileUser:
-            listFileUser.append([folder.name,folder.format,folder.icon,os.path.join(directoryUser,folder.name),folder.id,folder.path,docUser.docContains_id])
-        json_data = json.dumps({'fileUser':listFileUser})
-    else: 
-        folder = Document.objects.get(id=id)
-        if folder != None:
-            fileUser = Document.objects.filter(docContains=folder.id)
-            for file in fileUser:
-                fileContains.append([file.name,file.format,file.icon,os.path.join(directoryUser,file.name),file.id,file.path,folder.docContains_id])
-        json_data = json.dumps({'fileUser':fileContains})
-
-    return HttpResponse(json_data,content_type="application/json")
